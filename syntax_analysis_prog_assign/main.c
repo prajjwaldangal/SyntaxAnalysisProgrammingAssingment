@@ -17,6 +17,9 @@ int token;
 int nextToken;
 
 void addChar();
+void expr();
+void term();
+void factor();
 
 /* Character classes */
 #define LETTER 0
@@ -141,12 +144,64 @@ int lex() {
     return nextToken;
 }
 
+/*
+    Parser for arithmetic exprsn:
+    <expr>    -->  <term>   {(+ | -) <term>}
+    <term>    -->  <factor> {(* | /) <factor>}
+    <factor>  -->  id | int_constant | (<expr>)
+*/
+
+void expr() {
+    printf("Enter <expr>\n");
+    term();
+    
+    while (nextToken == ADD_OP || nextToken == SUB_OP) {
+        lex ();
+        term ();
+    }
+    printf("Exit <expr>\n");
+    /* End of function expr */
+}
+
+void term() {
+    printf("Enter <term>\n");
+    factor();
+    
+    while (nextToken == MULT_OP || nextToken == DIV_OP) {
+        lex();
+        factor();
+    }
+    printf("Exit <term>\n");
+}
+
+void factor() {
+    printf("Enter <factor>\n");
+    if (nextToken == IDENT || nextToken == INT_LIT)
+        lex();
+    else {
+        if (nextToken == LEFT_PAREN) {
+            lex();
+            expr();
+            if (nextToken == RIGHT_PAREN) {
+                lex();
+            } else
+                error();
+        }
+        else
+            error();
+    }
+}
+
+
 int main(int argc, const char * argv[]) {
     // insert code here...
     if ((fp = fopen("/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt", "r")) == NULL)
         printf("Error - cannot open input.txt\n");
     else {
         getchar();
+        do {
+            lex();
+        } while (nextToken != EOF);
         printf("Hello world\n");
     }
     return 0;
