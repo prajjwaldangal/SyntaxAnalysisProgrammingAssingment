@@ -9,36 +9,19 @@
 #include <stdio.h>
 #include <ctype.h>
 
+int charClass;
+char lexeme[100];
+char nextChar;
+int lexLen;
+int token;
 int nextToken;
 
 void addChar();
-void getChar();
-void getNonBlank();
 
 /* Character classes */
 #define LETTER 0
 #define DIGIT 1
 #define UNKNOWN 99
-
-void getChar() {
-    if (()
-}
-
-void getNonBlank() {
-    while (isspace(nextChar))
-        getchar();
-}
-
-int lex() {
-    lexLen = 0;
-    getNonBlank();
-    switch (charClass) {
-        case LETTER:
-            addChar();
-            getChar();
-            while (
-    }
-}
 
 /* Token codes */
 #define INT_LIT 10
@@ -52,6 +35,90 @@ int lex() {
 #define RIGHT_PAREN 26
 
 FILE *fp; /*, *fopen();*/
+
+int lookup(char ch) {
+    switch (ch) {
+            case '(':
+                addChar();
+                nextToken = LEFT_PAREN;
+                break;
+            case ')':
+                addChar();
+                nextToken = RIGHT_PAREN;
+                break;
+            case '+':
+                addChar();
+                nextToken = ADD_OP;
+                break;
+            case '-':
+                addChar();
+                nextToken = SUB_OP;
+                break;
+            case '*':
+                addChar();
+                nextToken = MULT_OP;
+                break;
+            case '/':
+                addChar();
+                nextToken = DIV_OP;
+                break;
+            default:
+                addChar();
+                nextToken = EOF;
+                break;
+    }
+    return nextToken;
+}
+
+/* addChar - a function to add nextChar to lexeme */
+void addChar() {
+    if (lexLen <= 98) {
+        lexeme[lexLen++] = nextChar;
+        lexeme[lexLen] = 0;
+    } else {
+        printf("Error - lexeme is too long\n");
+    }
+}
+
+/* sets nextChar and charClass */
+void getChar() {
+    if ((nextChar = getc(fp)) != EOF) {
+        if (isalpha(nextChar))
+            charClass = LETTER;
+        else if (isdigit(nextChar))
+            charClass = DIGIT;
+        else
+            charClass = UNKNOWN;
+    } else
+        charClass = EOF;
+}
+
+/* tackle space */
+void getNonBlank() {
+    while (isspace(nextChar))
+        getchar();
+}
+
+
+int lex() {
+    lexLen = 0;
+    getNonBlank();
+    switch (charClass) {
+        case LETTER:
+            addChar();
+            getChar();
+            while (charClass == LETTER || charClass == DIGIT) {
+                addChar();
+                getChar();
+            }
+            nextToken = IDENT;
+            break;
+        
+        case DIGIT:
+            addChar();
+            getChar();
+    }
+}
 
 int main(int argc, const char * argv[]) {
     // insert code here...
