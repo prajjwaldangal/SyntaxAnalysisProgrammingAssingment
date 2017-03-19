@@ -36,6 +36,7 @@ void addChar();
 
 FILE *fp; /*, *fopen();*/
 
+/*  */
 int lookup(char ch) {
     switch (ch) {
             case '(':
@@ -99,7 +100,7 @@ void getNonBlank() {
         getchar();
 }
 
-
+/* lex - a simple lexical analyzer for arithemetic expressions */
 int lex() {
     lexLen = 0;
     getNonBlank();
@@ -117,7 +118,27 @@ int lex() {
         case DIGIT:
             addChar();
             getChar();
+            while (charClass == DIGIT) {
+                addChar();
+                getChar();
+            }
+            nextToken = INT_LIT;
+            break;
+        case UNKNOWN:
+            lookup(nextChar);
+            getChar();
+            break;
+        
+        case EOF:
+            nextToken = EOF;
+            lexeme[0] = 'E';
+            lexeme[1] = 'O';
+            lexeme[2] = 'F';
+            lexeme[3] = 0;
+            break;
     }
+    printf("Next token is: %d, Next lexeme is %s\n", nextToken, lexeme);
+    return nextToken;
 }
 
 int main(int argc, const char * argv[]) {
