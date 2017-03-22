@@ -6,6 +6,13 @@
 //  Copyright © 2017 Prajjwal Dangal. All rights reserved.
 //
 
+/*
+Make a single program in the C language by augmenting and integrating the example C code in Section 4.2
+and 4.4.1 on the textbook. The program is supposed to read a text file line by line. For each line, it produces
+the output similar to what's shown on Page 178 and 179. If a syntax error is found, it should print an error
+message indicating where the error occurs in the line.
+*/
+
 #include <stdio.h>
 #include <ctype.h>
 
@@ -15,6 +22,7 @@ char nextChar;
 int lexLen;
 int token;
 int nextToken;
+int char_ind;
 
 void addChar();
 void expr();
@@ -95,6 +103,26 @@ void getChar() {
             charClass = UNKNOWN;
     } else
         charClass = EOF;
+}
+
+char * getCharHelper() {
+    if ((nextChar = getc(fp)) == NULL) {
+        return NULL;
+    }
+    int line_count = 1;
+    while (nextChar != '\n') {
+        nextChar = getc(fp);
+        line_count ++;
+    }
+    char * line = malloc(sizeof(char) * line_count);
+    rewind(fp);
+    nextChar = getc(fp);
+    line_count = 0;
+    while (nextChar != '\n') {
+        line[line_count] = nextChar;
+        nextChar = getc(fp);
+    }
+    return line;
 }
 
 /* tackle space */
@@ -191,7 +219,6 @@ void factor() {
             error();
     }
 }
-
 
 int main(int argc, const char * argv[]) {
     // insert code here...
