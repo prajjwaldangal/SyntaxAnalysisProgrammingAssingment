@@ -14,11 +14,13 @@ message indicating where the error occurs in the line.
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 int charClass;
 char lexeme[100];
 char nextChar;
+char * line = NULL;
 int lexLen;
 int token;
 int nextToken;
@@ -94,7 +96,7 @@ void addChar() {
 
 /* sets nextChar and charClass */
 void getChar() {
-    if ((nextChar = getc(fp)) != EOF) {
+    if ((nextChar = ) != EOF) {
         if (isalpha(nextChar))
             charClass = LETTER;
         else if (isdigit(nextChar))
@@ -106,22 +108,27 @@ void getChar() {
 }
 
 char * getCharHelper() {
-    if ((nextChar = getc(fp)) == NULL) {
+    char c;
+    if ((c = getc(fp)) == NULL) {
         return NULL;
     }
     int line_count = 1;
-    while (nextChar != '\n') {
-        nextChar = getc(fp);
+    while (c != '\n') {
+        c = getc(fp);
         line_count ++;
     }
-    char * line = malloc(sizeof(char) * line_count);
+    char line[line_count+2];
+    // char * line = malloc(sizeof(char) * line_count+1);
     rewind(fp);
-    nextChar = getc(fp);
-    line_count = 0;
-    while (nextChar != '\n') {
-        line[line_count] = nextChar;
-        nextChar = getc(fp);
+    c = getc(fp);
+    int i = 0;
+    while (c != '\n') {
+        line[i] = c;
+        c = getc(fp);
+        i ++;
     }
+    line[line_count] = '\n';
+    line[line_count+1] = line_count;
     return line;
 }
 
@@ -212,24 +219,39 @@ void factor() {
             expr();
             if (nextToken == RIGHT_PAREN) {
                 lex();
-            } else
-                error();
+            } // else
+                //error();
+                
         }
-        else
-            error();
+        // else
+            //error();
+            
     }
 }
 
+//void getChar2(char arr[]) {
+//    if ((nextChar = ))
+//}
+
 int main(int argc, const char * argv[]) {
-    // insert code here...
+    ssize_t read;
+    size_t len = 0;
     if ((fp = fopen("/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt", "r")) == NULL)
         printf("Error - cannot open input.txt\n");
     else {
-        getchar();
-        do {
-            lex();
-        } while (nextToken != EOF);
-        printf("Hello world\n");
+        while ((read = getline(&line, &len, fp)) != -1) {
+            
+        }
+        
+        fclose(fp);
+        if (line)
+            free(line);
+        exit(EXIT_SUCCESS);
+    // getchar();
+    //        do {
+    //            lex();
+    //        } while (nextToken != EOF);
+            printf("Hello world\n");
     }
     return 0;
 }
