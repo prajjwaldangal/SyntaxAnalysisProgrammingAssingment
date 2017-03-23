@@ -66,10 +66,12 @@ int main(int argc, const char * argv[]) {
         printf("Error - cannot open input.txt\n");
     else {
         while ((read = getline(&line, &len, fp)) != -1) {
+            // printf("")
             line_ind = 0;
             getChar();
            do {
                lex();
+               expr();
            } while ( nextToken != EOF );
        }
        fclose(fp);
@@ -220,7 +222,7 @@ void term() {
 }
 
 void error() {
-    printf("Error parsing %d", nextToken);
+    printf("Error parsing %d\n", nextToken);
 }
 
 void factor() {
