@@ -39,6 +39,7 @@ void error();
 #define LETTER 0
 #define DIGIT 1
 #define UNKNOWN 99
+#define TERM_CHAR 55
 
 /* Token codes */
 #define INT_LIT 10
@@ -51,33 +52,42 @@ void error();
 #define LEFT_PAREN 25
 #define RIGHT_PAREN 26
 
+/* file path: 
+    "/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt"
+*/
+
 FILE *fp; /*, *fopen();*/
 
 int main(int argc, const char * argv[]) {
     ssize_t read;
     size_t len = 0;
-    if ((fp = fopen("/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt", "r")) == NULL)
+    printf("%s", argv[1]);
+    if ((fp = fopen(argv[1], "r")) == NULL)
         printf("Error - cannot open input.txt\n");
     else {
         while ((read = getline(&line, &len, fp)) != -1) {
             line_ind = 0;
-            getchar();
-            do {
-                lex();
-            } while ((nextToken != '\n') || nextToken != EOF);
+            getChar();
+            // printf("");
+//            do {
+//                lex();
+//            } while ( nextToken != '\n' );
+//        }
+//        fclose(fp);
+//        if (line)
+//            free(line);
+//        exit(EXIT_SUCCESS);
+//        printf("Hello world\n");
         }
-        fclose(fp);
-        if (line)
-            free(line);
-        exit(EXIT_SUCCESS);
-        printf("Hello world\n");
     }
     return 0;
 }
 
 /* sets nextChar and charClass */
 void getChar() {
-    if ((nextChar = line[line_ind]) != '\n') {
+    printf("Hello world 2");
+    if ((nextChar = line[line_ind]) != '\0') {
+        printf("%c", nextChar);
         if (isalpha(nextChar))
             charClass = LETTER;
         else if (isdigit(nextChar))
@@ -116,6 +126,9 @@ int lookup(char ch) {
                 addChar();
                 nextToken = DIV_OP;
                 break;
+            case '\n':
+                addChar();
+                nextToken = '\n';
             default:
                 addChar();
                 nextToken = EOF;
@@ -137,7 +150,7 @@ void addChar() {
 /* tackle space */
 void getNonBlank() {
     while (isspace(nextChar))
-        getchar();
+        getChar();
 }
 
 /* lex - a simple lexical analyzer for arithemetic expressions */
@@ -168,7 +181,6 @@ int lex() {
             lookup(nextChar);
             getChar();
             break;
-        
         case EOF:
             nextToken = EOF;
             lexeme[0] = 'E';
