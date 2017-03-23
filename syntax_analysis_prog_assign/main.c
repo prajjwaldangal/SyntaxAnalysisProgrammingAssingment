@@ -24,12 +24,15 @@ char * line = NULL;
 int lexLen;
 int token;
 int nextToken;
-int char_ind;
+int line_ind;
 
 void addChar();
+void getChar();
 void expr();
 void term();
 void factor();
+int lookup(char ch);
+int lex();
 
 /* Character classes */
 #define LETTER 0
@@ -48,6 +51,28 @@ void factor();
 #define RIGHT_PAREN 26
 
 FILE *fp; /*, *fopen();*/
+
+int main(int argc, const char * argv[]) {
+    ssize_t read;
+    size_t len = 0;
+    if ((fp = fopen("/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt", "r")) == NULL)
+        printf("Error - cannot open input.txt\n");
+    else {
+        while ((read = getline(&line, &len, fp)) != -1) {
+            line_ind = 0;
+            getchar();
+            do {
+                lex();
+            } while (nextToken != EOF);
+        }
+        fclose(fp);
+        if (line)
+            free(line);
+        exit(EXIT_SUCCESS);
+        printf("Hello world\n");
+    }
+    return 0;
+}
 
 /*  */
 int lookup(char ch) {
@@ -96,40 +121,16 @@ void addChar() {
 
 /* sets nextChar and charClass */
 void getChar() {
-    if ((nextChar = ) != EOF) {
+    if ((nextChar = line[line_ind]) != '\n') {
         if (isalpha(nextChar))
             charClass = LETTER;
         else if (isdigit(nextChar))
             charClass = DIGIT;
         else
             charClass = UNKNOWN;
+        line_ind++;
     } else
         charClass = EOF;
-}
-
-char * getCharHelper() {
-    char c;
-    if ((c = getc(fp)) == NULL) {
-        return NULL;
-    }
-    int line_count = 1;
-    while (c != '\n') {
-        c = getc(fp);
-        line_count ++;
-    }
-    char line[line_count+2];
-    // char * line = malloc(sizeof(char) * line_count+1);
-    rewind(fp);
-    c = getc(fp);
-    int i = 0;
-    while (c != '\n') {
-        line[i] = c;
-        c = getc(fp);
-        i ++;
-    }
-    line[line_count] = '\n';
-    line[line_count+1] = line_count;
-    return line;
 }
 
 /* tackle space */
@@ -227,31 +228,4 @@ void factor() {
             //error();
             
     }
-}
-
-//void getChar2(char arr[]) {
-//    if ((nextChar = ))
-//}
-
-int main(int argc, const char * argv[]) {
-    ssize_t read;
-    size_t len = 0;
-    if ((fp = fopen("/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt", "r")) == NULL)
-        printf("Error - cannot open input.txt\n");
-    else {
-        while ((read = getline(&line, &len, fp)) != -1) {
-            
-        }
-        
-        fclose(fp);
-        if (line)
-            free(line);
-        exit(EXIT_SUCCESS);
-    // getchar();
-    //        do {
-    //            lex();
-    //        } while (nextToken != EOF);
-            printf("Hello world\n");
-    }
-    return 0;
 }
