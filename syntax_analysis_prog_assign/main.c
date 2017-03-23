@@ -26,6 +26,7 @@ int token;
 int nextToken;
 int line_ind;
 
+/* function declaration */
 void addChar();
 void getChar();
 void expr();
@@ -52,38 +53,39 @@ void error();
 #define LEFT_PAREN 25
 #define RIGHT_PAREN 26
 
-/* file path: 
-    "/Users/prajjwaldangal/Documents/cs/spring17/structures of programming languages/syntax_analysis_prog_assign/syntax_analysis_prog_assign/input.txt"
+/* 
+    file is input.txt
 */
 
-FILE *fp; /*, *fopen();*/
+FILE *fp;
 
+/* 
+    I am using getline to read line by line into global var line
+ */
 int main(int argc, const char * argv[]) {
     ssize_t read;
     size_t len = 0;
-    printf("%s", argv[1]);
     if ((fp = fopen(argv[1], "r")) == NULL)
         printf("Error - cannot open input.txt\n");
     else {
         while ((read = getline(&line, &len, fp)) != -1) {
-            // printf("")
             line_ind = 0;
             getChar();
            do {
                lex();
                expr();
            } while ( nextToken != EOF );
+            printf("\nParsing next line\n\n");
        }
        fclose(fp);
        if (line)
            free(line);
        exit(EXIT_SUCCESS);
-//        printf("Hello world\n");
     }
     return 0;
 }
 
-/* sets nextChar and charClass */
+/* sets nextChar and charClass, operates on line assigned from main */
 void getChar() {
     if ((nextChar = line[line_ind]) != '\0') {
         if (isalpha(nextChar))
@@ -97,7 +99,7 @@ void getChar() {
         charClass = EOF;
 }
 
-/*  */
+/* for the case when  */
 int lookup(char ch) {
     switch (ch) {
             case '(':
@@ -221,6 +223,7 @@ void term() {
     printf("Exit <term>\n");
 }
 
+/* error function */
 void error() {
     printf("Error parsing %d\n", nextToken);
 }
