@@ -33,6 +33,7 @@ void term();
 void factor();
 int lookup(char ch);
 int lex();
+void error();
 
 /* Character classes */
 #define LETTER 0
@@ -63,7 +64,7 @@ int main(int argc, const char * argv[]) {
             getchar();
             do {
                 lex();
-            } while (nextToken != EOF);
+            } while ((nextToken != '\n') || nextToken != EOF);
         }
         fclose(fp);
         if (line)
@@ -72,6 +73,20 @@ int main(int argc, const char * argv[]) {
         printf("Hello world\n");
     }
     return 0;
+}
+
+/* sets nextChar and charClass */
+void getChar() {
+    if ((nextChar = line[line_ind]) != '\n') {
+        if (isalpha(nextChar))
+            charClass = LETTER;
+        else if (isdigit(nextChar))
+            charClass = DIGIT;
+        else
+            charClass = UNKNOWN;
+        line_ind++;
+    } else
+        charClass = EOF;
 }
 
 /*  */
@@ -117,20 +132,6 @@ void addChar() {
     } else {
         printf("Error - lexeme is too long\n");
     }
-}
-
-/* sets nextChar and charClass */
-void getChar() {
-    if ((nextChar = line[line_ind]) != '\n') {
-        if (isalpha(nextChar))
-            charClass = LETTER;
-        else if (isdigit(nextChar))
-            charClass = DIGIT;
-        else
-            charClass = UNKNOWN;
-        line_ind++;
-    } else
-        charClass = EOF;
 }
 
 /* tackle space */
@@ -210,6 +211,10 @@ void term() {
     printf("Exit <term>\n");
 }
 
+void error() {
+    printf("Error parsing %d", nextToken);
+}
+
 void factor() {
     printf("Enter <factor>\n");
     if (nextToken == IDENT || nextToken == INT_LIT)
@@ -220,12 +225,11 @@ void factor() {
             expr();
             if (nextToken == RIGHT_PAREN) {
                 lex();
-            } // else
-                //error();
-                
+            } else
+                error();
         }
-        // else
-            //error();
+        else
+            error();
             
     }
 }
