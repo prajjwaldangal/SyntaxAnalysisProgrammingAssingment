@@ -68,26 +68,22 @@ int main(int argc, const char * argv[]) {
         while ((read = getline(&line, &len, fp)) != -1) {
             line_ind = 0;
             getChar();
-            // printf("");
-//            do {
-//                lex();
-//            } while ( nextToken != '\n' );
-//        }
-//        fclose(fp);
-//        if (line)
-//            free(line);
-//        exit(EXIT_SUCCESS);
+           do {
+               lex();
+           } while ( nextToken != EOF );
+       }
+       fclose(fp);
+       if (line)
+           free(line);
+       exit(EXIT_SUCCESS);
 //        printf("Hello world\n");
-        }
     }
     return 0;
 }
 
 /* sets nextChar and charClass */
 void getChar() {
-    printf("Hello world 2");
     if ((nextChar = line[line_ind]) != '\0') {
-        printf("%c", nextChar);
         if (isalpha(nextChar))
             charClass = LETTER;
         else if (isdigit(nextChar))
@@ -242,6 +238,5 @@ void factor() {
         }
         else
             error();
-            
     }
 }
