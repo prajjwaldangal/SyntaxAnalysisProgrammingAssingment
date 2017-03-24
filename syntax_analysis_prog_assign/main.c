@@ -243,5 +243,5 @@ void factor() {
 
 /* error function */
 void error() {
-    printf("Error parsing %s, at position %d in the line\n", lexeme, line_ind);
+    printf("Error parsing %s : %s, at position %d in the line\n", line, lexeme, line_ind);
 }

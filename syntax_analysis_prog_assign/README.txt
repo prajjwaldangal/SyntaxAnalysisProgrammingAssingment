@@ -40,5 +40,3 @@ Instructions to compile:
 	Reasons why the program is highly efficient:
 1. Use of getline.
 2. Use of line_ind (line index) to identify where syntax error occurs.
-
-Also, if you 
