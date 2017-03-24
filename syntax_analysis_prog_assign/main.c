@@ -18,7 +18,7 @@ message indicating where the error occurs in the line.
 #include <ctype.h>
 
 int charClass;
-char lexeme[100];
+char lexeme[1000];
 char nextChar;
 char * line = NULL;
 int lexLen;
@@ -223,11 +223,6 @@ void term() {
     printf("Exit <term>\n");
 }
 
-/* error function */
-void error() {
-    printf("Error parsing %d\n", nextToken);
-}
-
 void factor() {
     printf("Enter <factor>\n");
     if (nextToken == IDENT || nextToken == INT_LIT)
@@ -244,4 +239,9 @@ void factor() {
         else
             error();
     }
+}
+
+/* error function */
+void error() {
+    printf("Error parsing %d, at position %d in the line\n", nextChar, line_ind);
 }
