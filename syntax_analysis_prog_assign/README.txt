@@ -33,7 +33,7 @@ Instructions to compile:
 1. Compile the main. file:
 						gcc -o parser main.c
 2. Run the executable generated thus by supplying the path of the input file as:
-						/parser input.txt
+						./parser input.txt
 
 
 
